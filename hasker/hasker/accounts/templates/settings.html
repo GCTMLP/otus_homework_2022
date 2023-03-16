@@ -1,0 +1,85 @@
+{% extends 'Intro.html' %}
+
+{% block content %}
+
+{% load static %}
+<div id="middle" class="flex-fill">
+
+    <div id="settings" class="row">
+
+        <div class=" col-12 col-lg-1">
+        </div>
+        <div class=" col-12 col-lg-8">
+            <div class="portlet-body">
+                <div class="row h-100 d-flex align-items-center">
+                    <div class="col-12 col-md-4 col-xl-4 text-center">
+                        <label class="w--120 h--120 rounded-circle text-center position-relative d-inline-block cursor-pointer border border-secondary border-dashed bg-white">
+                            <a href="#"
+                               class="js-file-upload-avatar-circle-remove hide position-absolute absolute-top w-100 z-index-3">
+									<span class="d-inline-block btn btn-sm btn-pill bg-secondary text-white pt--4 pb--4 pl--10 pr--10 m--1 mt--n15"
+                                          title="remove" data-tooltip="tooltip">
+										<i class="fi fi-close m-0"></i>
+									</span>
+                            </a>
+
+                            <span class="z-index-2 js-file-input-avatar-circle-container d-block absolute-full z-index-1 hide-empty">
+									<a v-if="visible === true"
+                                       class="d-inline-block position-relative overflow-hidden text-center rounded-circle m-0 p-0 animate-bouncein bg-cover"
+                                       v-bind:style="{ width: '118px', height: '118px', 'background-image': 'url(' + foto + ')' }"></a>
+								</span>
+                            <input type="file" id="file" ref="file" v-on:change="hide_foto()"
+                                   type="file"
+                                   data-file-ext="jpg, png"
+                                   data-file-max-size-kb-per-file="1024"
+                                   data-file-ext-err-msg="Allowed:"
+                                   data-file-size-err-item-msg="File too large!"
+                                   data-file-size-err-total-msg="Total allowed size exceeded!"
+                                   data-file-toast-position="bottom-center"
+                                   data-file-preview-container=".js-file-input-avatar-circle-container"
+                                   data-file-preview-show-info="false"
+                                   data-file-preview-class="rounded-circle m-0 p-0 animate-bouncein"
+                                   data-file-preview-img-height="118"
+                                   data-file-btn-clear="a.js-file-upload-avatar-circle-remove"
+                                   data-file-preview-img-cover="true"
+                                   class="custom-file-input absolute-full">
+
+                        </label>
+                        <small class="d-block">click to upload </small>
+
+                    </div>
+
+                    <div class="col my-3">
+                        <div class="form-label-group mt-3">
+                            <input v-model="login" required placeholder="login" id="account_last_name"
+                                   name="account[last_name]" type="text" value="" class="form-control">
+                            <label for="account_last_name">login</label>
+                        </div>
+                        <div class="form-label-group mt-3">
+                            <input v-model="email" required placeholder="email" id="account_last_name"
+                                   name="account[last_name]" type="text" value="" class="form-control">
+                            <label for="account_last_name">email</label>
+                        </div>
+                        <div class="form-label-group mt-3">
+                            <button @click="submitFile()" type="submit" class="btn btn-primary">
+                                <i class="fi fi-check"></i>
+                                Save Changes
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="order-1 order-lg-2 col-12 col-lg-2">
+            <div class="shadow-md rounded bg-white mb-4 p-4">
+                <a href="/" type="button" class="ml--25 mt--10 btn btn-primary btn-soft mb-3">
+                    <i class="fi fi-round-question"></i>
+                    Ask a Question
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/myjs/settings.js'%}"></script>
+
+{% endblock content %}

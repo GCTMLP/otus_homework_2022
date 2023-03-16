@@ -1,0 +1,202 @@
+{% extends 'Intro.html' %}
+
+{% block content %}
+
+{% load static %}
+<div id="middle" class="flex-fill">
+    <div id="answers" class="row">
+
+        <div class=" col-12 col-lg-1">
+        </div>
+        <div class=" col-12 col-lg-8">
+            <section class="mb-0">
+                <div class="bg-white p-4 rounded">
+                    <h1 class="h4 mb-1 text-primary font-weight-normal">
+                        Question
+                    </h1>
+
+
+                    <div class="row mb-5">
+                        <div class="col-md-2 text-center">
+                            <!-- avatar -->
+                            <span class="w--80 h--80 rounded-circle d-inline-block bg-cover"
+                                  v-bind:style="{ width: '118px', height: '118px', 'background-image': 'url(' + question.foto + ')' }"></span>
+                            <ul class="list-inline mb-3 text-muted fs--14">
+                                <li class="list-inline-item">
+                                    <i class="fi fi-user-male float-start"></i> by { question.user_name }
+                                </li>
+                                <li class="list-inline-item">
+                                    <i class="fi fi-time float-start">{ question.pub_date }</i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="mb-2">
+                                <h5>{ question.question_header }</h5>
+
+                            </div>
+
+                            <p>
+                                { question.question_text }
+                            </p>
+                        </div>
+                        <div class=" text-center col d-flex align-items-center">
+                            <span v-for="(tag, index) in question.tags"
+                                  class="text-center badge badge-soft badge-primary">#{ tag }</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <h1 class="h4 mb-1 text-primary font-weight-normal">
+                                Answers
+                            </h1>
+                        </div>
+                        <div class="col-1">
+                            <select @change="change_count(filter.limit)" id="count_info" v-model="filter.limit"
+                                    class="form-control-sm bs-select">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="all">all</option>
+                            </select>
+                        </div>
+                        <div class="col-4 ">
+
+                            <input type="text" v-model="filter.search" class="form-control  form-control-sm mb-3"
+                                   placeholder="Поиск">
+                        </div>
+                        <div class="col-4 text-left">
+
+                            <button @click="get_answers(num, 1)" type="button"
+                                    class="btn btn rounded-circle btn-outline-primary mb-2"><i class="fi fi-search"></i>
+                            </button>
+                            <button @click="clean_search(1)" type="button"
+                                    class="btn btn rounded-circle btn-outline-secondary mb-2"><i
+                                    class="fi mdi-format_clear"></i></button>
+                        </div>
+                    </div>
+                    <div v-for="(answer, index) in answers" class="row mb-5">
+                        <div class="col-md-2 text-center">
+                            <!-- avatar -->
+                            <span class="w--80 h--80 rounded-circle d-inline-block bg-cover"
+                                  v-bind:style="{ width: '118px', height: '118px', 'background-image': 'url(' + answer.foto + ')' }"></span>
+                            <ul class="list-inline mb-3 text-muted fs--14">
+                                <li class="list-inline-item">
+                                    <i class="fi fi-user-male float-start"></i> by { answer.user_name }
+                                </li>
+                                <li class="list-inline-item">
+                                    <i class="fi fi-time float-start">{ answer.pub_date }</i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-10">
+
+                            <div class="row">
+                                <div class="col-10">
+                                    <p>
+                                        { answer.text }
+                                    </p>
+                                </div>
+                                <div class="col-1">
+
+                                    <small class="d-lg-block">
+                                        { answer.count_votes } Votes
+                                    </small>
+                                    {% if user.is_authenticated %}
+                                    <button @click="plus_vote(answer.id)" v-if="answer.is_voted == false" type="button"
+                                            class="btn btn-sm rounded-circle btn-outline-primary mb-2"><i
+                                            class="fi fi-plus"></i></button>
+                                    <button @click="minus_vote(answer.id)" v-if="answer.is_voted == true" type="button"
+                                            class="btn btn-sm rounded-circle btn-outline-primary mb-2"><i
+                                            class="fi fi-minus"></i></button>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-1">
+
+                                    <small v-if="make_truth == true" class="d-lg-block">
+                                        Correct!
+                                    </small>
+
+                                    <button @click="correct(answer.id, question.id)" type="button"
+                                            v-if="answer.truth == 0 && make_truth == true"
+                                            class="btn btn-sm rounded-circle btn-outline-warning mb-2"><i
+                                            class="fi fi-star"></i></button>
+
+                                    <button @click="uncorrect(answer.id)" type="button"
+                                            v-if="answer.truth == 1 && make_truth == true"
+                                            class="btn btn-sm rounded-circle btn-warning mb-2"><i
+                                            class="fi fi-star"></i></button>
+                                    <small v-if="answer.truth == 1 && make_truth == false" class="d-lg-block">
+                                        Correct!
+                                    </small>
+                                    <button type="button" v-if="answer.truth == 1 && make_truth == false"
+                                            class="btn btn-sm rounded-circle btn-warning mb-2"><i
+                                            class="fi fi-star"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <h1 class="h4 mb-4 font-weight-normal">
+                        Add Answer
+                    </h1>
+                    <div class="form-label-group mb-3">
+                        <textarea v-model="a_text" placeholder="Text" id="text" class="form-control"
+                                  rows="3"></textarea>
+                        <label for="text">Text</label>
+                    </div>
+                    <div>
+                        <button @click="answer_question" type="button" class="btn btn-primary" data-dismiss="modal">
+                            <i class="fi fi-cog-full"></i>
+                            Answer!
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+                <nav aria-label="pagination">
+                    <ul class="pagination pagination-pill justify-content-center ">
+                        <li class="page-item">
+                            <a class="page-link" @click="minus_page()" v-if="filter.page != 1">Previous</a>
+                        </li>
+                        <li v-for="i in 5" class="page-item">
+                            <a v-if="filter.pages >= i+filter.pages_big" class="page-link"
+                               v-bind:class="{ 'bg-primary-soft': i+filter.pages_big == filter.page }"
+                               @click="change_page_big(i+filter.pages_big)">{ i+filter.pages_big }</a>
+                        </li>
+                        <li class="page-item">
+                            <a v-if="filter.page != filter.pages" @click="plus_page()" class="page-link">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </section>
+        </div>
+        <div class="order-1 order-lg-2 col-12 col-lg-2">
+            <div class="shadow-md rounded bg-white mb-4 p-4">
+                <h4 class="h4 mb-3 text-primary font-weight-normal">
+                    Popular Questions:
+                    <ul class="nav flex-column d-none d-sm-block fs--16">
+                        <div v-for="(pop_question, index) in popular_questions">
+                            <div>
+                                <li class="nav-item active border-bottom py-2">
+                                    <a class="d-block text-dark font-weight-medium"
+                                       v-bind:href="'/answers?q=' + pop_question.id">
+                                        { index+1 }. { pop_question.question_header }
+                                        <span class="badge badge-primary float-end font-weight-normal mt-1">{ pop_question.count_votes } votes</span>
+                                    </a>
+                                </li>
+                            </div>
+                        </div>
+                    </ul>
+                </h4>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="{% static 'assets/myjs/answers.js'%}"></script>
+</div>
+
+{% endblock content %}

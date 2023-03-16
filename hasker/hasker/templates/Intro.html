@@ -1,0 +1,121 @@
+{% load static %}
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="UTF-8">
+		<title>Hasker</title>
+		<meta name="description" content="...">
+		<meta http-equiv="Cache-control" content="NO-CACHE">
+
+        <meta name="viewport" content="width=device-width, maximum-scale=5, initial-scale=1, user-scalable=0">
+       
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
+        <link rel="preconnect" href="https://fonts.googleapis.com/">
+        <link rel="preconnect" href="https://fonts.gstatic.com/">
+
+        <link rel="stylesheet" href= "{% static 'assets/css/core.min.css'%}">
+        <link rel="stylesheet" href= "{% static 'assets/css/vendor_bundle.min.css'%}">
+        <link rel="stylesheet" href= "{% static 'assets/css/datatables.min.css'%}">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link rel="apple-touch-icon" href="demo.files/logo/icon_512x512.png">
+
+		<link rel="manifest" href="assets/images/manifest/manifest.json">
+		<meta name="theme-color" content="#377dff">
+
+	</head>
+<header id="header" class="shadow-xs">
+	<div id = "user_sess" class="container-xlg p-0-md p-0-xs">
+		<div class="container-fluid p-0-md p-0-xs position-relative">
+			<nav class="navbar navbar-expand-lg navbar-light justify-content-lg-between justify-content-md-inherit">
+				<div class="align-items-start">
+								
+					<a class="navbar-brand" href="/">
+						<img src="/hasker/static/pictures/logo.png" width="90" height="100" alt="...">
+					</a>
+				</div>
+				{% if user.is_authenticated %}
+				<ul class="list-inline list-unstyled mb-0 d-flex align-items-end">
+					<li class="list-inline-item ml--6 mr--6 dropdown">
+						<a href="#" id="dropdownAccountOptions" class="btn btn-sm btn-light dropdown-toggle btn-pill pl--12 pr--12" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+										
+							<span class="group-icon m-0">
+								<i class="fi w--15 fi-user-male"></i>
+								<i class="fi w--15 fi-close"></i>
+							</span>
+							<span class="fs--14 d-none d-sm-inline-block font-weight-medium">{ user_name }</span>
+						</a>
+						
+						<div aria-labelledby="dropdownAccountOptions" class="prefix-link-icon prefix-icon-dot dropdown-menu dropdown-menu-clean dropdown-menu-navbar-autopos dropdown-menu-invert dropdown-click-ignore p-0 mt--18 fs--15 w--300">
+										
+							<div class="dropdown-header fs--14 py-4">
+								<div class="w--60 h--60 rounded-circle bg-light bg-cover float-start" style="background-image:url('../../html_frontend/demo.files/images/icons/user80.png')"></div>
+											
+									<span class="d-block font-weight-medium text-truncate fs--16">{ user_name }</span>
+									<span class="d-block text-muted font-weight-medium text-truncate">{ email }</span>
+
+							</div>
+								<a href="/settings/"class="prefix-icon-ignore dropdown-footer dropdown-custom-ignore font-weight-medium pt-3 pb-3">
+									<i class="fi fi-cogs float-start"></i>
+									Settings
+								</a>
+
+								<a  href="{% url 'logout' %}" class="prefix-icon-ignore dropdown-footer dropdown-custom-ignore font-weight-medium pt-3 pb-3">
+									<i class="fi fi-power float-start"></i>
+									Log Out
+								</a>
+						</div>
+						
+					</li>
+				</ul>
+				{% else %}
+				<div class="col-12 col-md-2 text-right">
+					<a href="{% url 'login' %}" type="button" class="btn btn-primary btn-pill mb-1">Log In</a>
+					<a href="{% url 'register' %}" type="button" class="btn btn-primary btn-soft btn-pill mb-1">Register</a>
+				</div>
+				{% endif %}
+			</nav>
+		</div>		
+	</div>
+	<script src="{% static 'assets/myjs/header_fill.js'%}?4"></script>
+</header>
+<body class="layout-admin header-sticky" data-s2t-class="btn-primary btn-sm bg-gradient-default rounded-circle b-0">
+<script src="{% static 'assets/js/vue-toastr.umd.min.js'%}"></script>
+
+	  {% block content %}{% endblock %}
+
+<footer id="footer" class="aside-primary text-white">
+	<div class="p-3 fs--14">
+		&copy; My Super Company GCTMLP
+		<div class="d-inline-block float-end dropdown">
+			<ul class="list-inline m-0">
+				<li class="dropdown list-inline-item m-0">
+					<a id="topDDLanguage" href="#!" class="d-inline-block" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+						<i class="flag flag-us"></i> 
+							<span class="pl-2 pr-2">ENGLISH</span>
+					</a>
+
+					<div aria-labelledby="topDDLanguage" class="dropdown-menu fs--13 px-1 pt-1 pb-0 m-0 max-h-50vh scrollable-vertical dropdown-menu-right">
+						<a href="#!" class="active dropdown-item text-muted text-truncate line-height-1 rounded p--12 mb-1">
+							<i class="flag flag-us"></i> 
+								ENGLISH
+						</a>
+						<a href="#!" class="dropdown-item text-muted text-truncate line-height-1 rounded p--12 mb-1">
+							<i class="flag flag-ru"></i> 
+								RUSSIAN
+						</a>
+					</div>
+
+				</li>				
+			</ul>
+		</div>
+	</div>
+</footer>
+
+<script src="{% static 'assets/js/core.min.js'%}"></script>
+<script src="{% static 'assets/js/vue.js'%}"></script>
+<script src="{% static 'assets/vendor/axios/dist/axios.js'%}"></script>
+</body>

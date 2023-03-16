@@ -1,0 +1,208 @@
+{% extends 'Intro.html' %}
+
+{% block content %}
+
+{% load static %}
+<div id="middle" class="flex-fill">
+
+    <div id="questions" class="row">
+
+        <div class=" col-12 col-lg-1">
+        </div>
+        <div class=" col-12 col-lg-8">
+            <section class="mb-0">
+                <div class="bg-white p-4 rounded">
+                    <h2 class="h4 mb-3 text-primary font-weight-normal">
+                        Ask Question
+
+                    </h2>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <select @change="change_count(filter.limit)" id="count_info" v-model="filter.limit"
+                                    class="form-control-sm bs-select">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="all">all</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3 ">
+                            <input type="text" v-model="filter.search" class="form-control  form-control-sm mb-3"
+                                   placeholder="Поиск">
+                        </div>
+                        <div class="col-12 col-md-2 text-right">
+
+                            <button @click="get_questions(1)" type="button"
+                                    class="btn btn rounded-circle btn-outline-primary mb-2"><i class="fi fi-search"></i>
+                            </button>
+                            <button @click="clean_search(1)" type="button"
+                                    class="btn btn rounded-circle btn-outline-secondary mb-2"><i
+                                    class="fi mdi-format_clear"></i></button>
+                        </div>
+                    </div>
+
+                    <div v-for="(question, index) in questions" class="position-relative border-bottom pt-3">
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-flex">
+                                    <div class="w--40 d-flex align-items-center">
+                                        <a href="#!"
+                                           class="w--40 h--40 rounded-circle d-inline-block bg-light bg-cover lazy"
+                                           v-bind:style="{ width: '118px', height: '118px', 'background-image': 'url(' + question.foto + ')' }"></a>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        <a v-bind:href="'/answers?q=' + question.id" class="h6 mb-0 text-dark">
+                                            { question.question_header }
+                                        </a>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        <a @click="search_tag(tag)" v-for="(tag, index) in question.tags"
+                                           class="badge badge-soft badge-primary">#{ tag }</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <div class="row no-gutters col-border text-center">
+                                    <div class="col-6">
+                                        { question.count_answers }
+                                        <small class="d-lg-block">
+                                            Answers
+                                        </small>
+                                    </div>
+                                    <div class="col-6">
+                                        { question.count_votes }
+                                        <small class="d-lg-block">
+                                            Votes
+                                        </small>
+                                        {% if user.is_authenticated %}
+                                        <button @click="plus_vote(question.id)" v-if="question.is_voted == 0"
+                                                type="button"
+                                                class="btn btn-sm rounded-circle btn-outline-primary mb-2"><i
+                                                class="fi fi-plus"></i></button>
+                                        <button @click="minus_vote(question.id)" v-if="question.is_voted == 1"
+                                                type="button"
+                                                class="btn btn-sm rounded-circle btn-outline-primary mb-2"><i
+                                                class="fi fi-minus"></i></button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-inline mb-3 text-muted fs--14">
+                            <li class="list-inline-item">
+                                <i class="fi fi-user-male float-start"></i> by <a href="#!" class="link-muted">{
+                                question.user_name }</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="fi fi-time float-start"></i> { question.pub_date }
+                            </li>
+                        </ul>
+                    </div>
+
+                    <nav aria-label="pagination">
+                        <ul class="pagination pagination-pill justify-content-center ">
+                            <li class="page-item">
+                                <a class="page-link" @click="minus_page()" v-if="filter.page != 1">Previous</a>
+                            </li>
+                            <li v-for="i in 5" class="page-item">
+                                <a v-if="filter.pages >= i+filter.pages_big" class="page-link"
+                                   v-bind:class="{ 'bg-primary-soft': i+filter.pages_big == filter.page }"
+                                   @click="change_page_big(i+filter.pages_big)">{ i+filter.pages_big }</a>
+                            </li>
+                            <li class="page-item">
+                                <a v-if="filter.page != filter.pages" @click="plus_page()" class="page-link">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+
+
+                </div>
+
+            </section>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="order-1 order-lg-2 col-12 col-lg-2">
+            <div class="sticky-kit">
+                <div class="shadow-md rounded bg-white mb-4 p-4">
+                    <button type="button" class="ml--25 mt--10 btn btn-primary btn-soft mb-3" data-toggle="modal"
+                            data-target="#exampleModalLg">
+                        <i class="fi fi-round-question"></i>
+                        Ask a Question
+                    </button>
+
+
+                    <div class="modal fade" id="exampleModalLg" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabelLg" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabelLg">Ask a Question</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span class="fi fi-close fs--18" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-label-group mb-3">
+                                        <input v-model="new_quest.title" placeholder="Title" id="title" type="text"
+                                               value="" class="form-control">
+                                        <label for="title">Title</label>
+                                    </div>
+                                    <div class="form-label-group mb-3">
+                                        <textarea v-model="new_quest.text" placeholder="Text" id="text"
+                                                  class="form-control" rows="3"></textarea>
+                                        <label for="text">Text</label>
+                                    </div>
+                                    <div class="form-label-group mb-3">
+                                        <input v-model="new_quest.tags" placeholder="tag1 tag2 tag3" id="tags"
+                                               type="text" value="" v-bind:class="{ 'is-invalid': istag_invalid }"
+                                               class="form-control">
+                                        <label for="tags">Tags</label>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button @click="ask_question" type="button" class="btn btn-primary">
+                                        <i class="fi fi-round-question"></i>
+                                        Ask!
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        <i class="fi fi-close"></i>
+                                        Close
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-md rounded bg-white mb-4 p-4">
+                    <h4 class="h4 mb-3 text-primary font-weight-normal">
+                        Popular Questions:
+                        <ul class="nav flex-column d-none d-sm-block fs--16">
+                            <div v-for="(pop_question, index) in popular_questions">
+                                <div>
+                                    <li class="nav-item active border-bottom py-2">
+                                        <a class="d-block text-dark font-weight-medium"
+                                           v-bind:href="'/answers?q=' + pop_question.id">
+                                            { index+1 }. { pop_question.question_header }
+                                            <span class="badge badge-primary float-end font-weight-normal mt-1">{ pop_question.count_votes } votes</span>
+                                        </a>
+
+                                    </li>
+                                </div>
+                            </div>
+                        </ul>
+                    </h4>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+        <script src="{% static 'assets/myjs/questions.js'%}"></script>
+    </div>
+</div>
+
+{% endblock content %}
