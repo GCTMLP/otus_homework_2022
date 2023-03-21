@@ -1,22 +1,24 @@
 # otus_homework_2022
 ДЗ для курса "Python developer. Professional", 2022
 
-# log_analyser
+# Проекты
 
-# cpython_patch
+## log_analyser
 
-# scoring_api
+## cpython_patch
 
-# http_server
+## scoring_api
 
-# uwsgi_daemon
+## http_server
 
-# hasker
+## uwsgi_daemon
 
-# logistic_regression
+## hasker
 
-# data_analyser
+## logistic_regression
 
-# concurency_memcached_loader
+## data_analyser
 
-# asyncio_crawler
+## concurency_memcached_loader
+
+## asyncio_crawler
