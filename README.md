@@ -3,9 +3,9 @@
 
 # Проекты
 
-## log_analyser
+### log_analyser
 
-## cpython_patch
+### cpython_patch
 
 ## scoring_api
 
