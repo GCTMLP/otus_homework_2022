@@ -5,7 +5,9 @@
 
 ### log_analyser
 https://github.com/GCTMLP/otus_homework_2022/tree/main/log_analyser
+
 Стэк: python3
+
 Скрипт для парсинга и анализа лог-файлов сервера nginx
 
 ### cpython_patch
